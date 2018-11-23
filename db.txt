@@ -1,0 +1,125 @@
+CREATE SEQUENCE public.user_person_id_seq;
+
+CREATE TABLE public.user_1 (
+                user_ide INTEGER NOT NULL DEFAULT nextval('public.user_person_id_seq'),
+                user_nam VARCHAR(40) NOT NULL,
+                user_pas VARCHAR(20) NOT NULL,
+                user_sta BOOLEAN NOT NULL,
+                CONSTRAINT user_1_pk PRIMARY KEY (user_ide)
+);
+
+
+ALTER SEQUENCE public.user_person_id_seq OWNED BY public.user_1.user_ide;
+
+CREATE SEQUENCE public.coment_coment_id_seq;
+
+CREATE TABLE public.coment (
+                coment_ide INTEGER NOT NULL DEFAULT nextval('public.coment_coment_id_seq'),
+                comnet_txt_req VARCHAR(500) NOT NULL,
+                coment_txt_res VARCHAR(500),
+                user_ide INTEGER NOT NULL,
+                CONSTRAINT coment_pk PRIMARY KEY (coment_ide)
+);
+
+
+ALTER SEQUENCE public.coment_coment_id_seq OWNED BY public.coment.coment_ide;
+
+CREATE SEQUENCE public.product_product_id_seq;
+
+CREATE TABLE public.product (
+                product_ide INTEGER NOT NULL DEFAULT nextval('public.product_product_id_seq'),
+                product_num INTEGER NOT NULL,
+                product_nam VARCHAR(40) NOT NULL,
+                product_pri REAL DEFAULT 0 NOT NULL,
+                user_ide INTEGER NOT NULL,
+                product_des VARCHAR,
+                CONSTRAINT product_pk PRIMARY KEY (product_ide)
+);
+
+
+ALTER SEQUENCE public.product_product_id_seq OWNED BY public.product.product_ide;
+
+CREATE SEQUENCE public.bill_bill_ide_seq;
+
+CREATE TABLE public.bill (
+                bill_ide INTEGER NOT NULL DEFAULT nextval('public.bill_bill_ide_seq'),
+                bill_date TIMESTAMP NOT NULL,
+                bill_num INTEGER NOT NULL,
+                product_ide INTEGER NOT NULL,
+                bill_mou REAL NOT NULL,
+                user_ide INTEGER NOT NULL,
+                CONSTRAINT bill_pk PRIMARY KEY (bill_ide)
+);
+
+
+ALTER SEQUENCE public.bill_bill_ide_seq OWNED BY public.bill.bill_ide;
+
+CREATE TABLE public.car (
+                product_ide INTEGER NOT NULL,
+                user_ide INTEGER NOT NULL,
+                CONSTRAINT car_pk PRIMARY KEY (product_ide, user_ide)
+);
+
+
+CREATE TABLE public.product_coment (
+                product_ide INTEGER NOT NULL,
+                coment_ide INTEGER NOT NULL,
+                CONSTRAINT product_coment_pk PRIMARY KEY (product_ide, coment_ide)
+);
+
+
+ALTER TABLE public.product ADD CONSTRAINT user_product_fk
+FOREIGN KEY (user_ide)
+REFERENCES public.user_1 (user_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.coment ADD CONSTRAINT user_coment_fk
+FOREIGN KEY (user_ide)
+REFERENCES public.user_1 (user_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.car ADD CONSTRAINT user_car_fk
+FOREIGN KEY (user_ide)
+REFERENCES public.user_1 (user_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.bill ADD CONSTRAINT user_1_bill_fk
+FOREIGN KEY (user_ide)
+REFERENCES public.user_1 (user_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.product_coment ADD CONSTRAINT coment_product_coment_fk
+FOREIGN KEY (coment_ide)
+REFERENCES public.coment (coment_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.product_coment ADD CONSTRAINT product_product_coment_fk
+FOREIGN KEY (product_ide)
+REFERENCES public.product (product_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.car ADD CONSTRAINT product_car_fk
+FOREIGN KEY (product_ide)
+REFERENCES public.product (product_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.bill ADD CONSTRAINT product_bill_fk
+FOREIGN KEY (product_ide)
+REFERENCES public.product (product_ide)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
