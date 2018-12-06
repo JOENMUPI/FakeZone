@@ -35,6 +35,16 @@ public class DB {
 		finally { free(); }
 	}
 	
+	public void delete(String path, String props, String query, Object... params) {
+		try {
+			this.pstm = setParams(cn.prepareStatement(Props.getPropertiesFile(path, props).getProperty(query)), params);
+			this.pstm.executeUpdate();
+		} 
+	
+		catch (SQLException e) { e.printStackTrace(); } 
+		finally { free(); }
+	}
+	
 	public DataSet doInsert(String path, String props, String query, Object ...params) {
 		try {
 			this.pstm = setParams(cn.prepareStatement(Props.getPropertiesFile(path, props).getProperty(query), PreparedStatement.RETURN_GENERATED_KEYS), params);
